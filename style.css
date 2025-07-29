@@ -1,0 +1,64 @@
+/* Minimal custom CSS for Bootstrap version */
+.night-toggle {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    outline: none;
+}
+.night-toggle.toggled i {
+    transform: rotate(180deg);
+    transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+}
+body.night-mode {
+    background-color: #181A1B !important;
+}
+body.night-mode .card,
+body.night-mode .navbar,
+body.night-mode .container {
+    background-color: #23272b !important;
+    color: #f1f1f1 !important;
+}
+body.night-mode .btn {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: none;
+}
+body.night-mode .btn-primary {
+    background-color: #0d6efd !important;
+}
+body.night-mode .btn-success {
+    background-color: #198754 !important;
+}
+body.night-mode .btn-light {
+    background-color: #222 !important;
+    color: #ffd700 !important;
+    border: 2px solid #ffd700 !important;
+}
+body.night-mode .btn-light:hover {
+    background-color: #ffd700 !important;
+    color: #222 !important;
+}
+body.night-mode .navbar {
+    background-color: #181A1B !important;
+}
+body.night-mode .nav-link {
+    color: #ffd700 !important;
+}
+.navbar {
+    background-color: #212529 !important;
+    height: 70px;
+    border-radius: 0 !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+.nav-link {
+    color: #fff !important;
+    transition: color 0.3s;
+}
+.nav-link.active, .nav-link:focus, .nav-link:hover {
+    color: #0d6efd !important;
+}
+body.night-mode .nav-link {
+    color: #ffd700 !important;
+} 
