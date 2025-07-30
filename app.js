@@ -8,6 +8,42 @@ let isRecording = false;
 let countdownInterval;
 let recordingTimeout;
 
+let db;
+
+// IndexedDB setup
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('DailyRecordDB', 1);
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+        
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            
+            // Create object store for records
+            if (!db.objectStoreNames.contains('records')) {
+                const store = db.createObjectStore('records', { keyPath: 'id' });
+                store.createIndex('date', 'date', { unique: false });
+                store.createIndex('timestamp', 'timestamp', { unique: false });
+            }
+        };
+    });
+}
+
+// Initialize database when page loads
+window.addEventListener('load', async () => {
+    try {
+        await initDB();
+        console.log('IndexedDB initialized successfully');
+    } catch (error) {
+        console.error('Failed to initialize IndexedDB:', error);
+    }
+});
+
 // Set today's date by default (for add.html)
 if (document.getElementById('recordDate')) {
     document.getElementById('recordDate').valueAsDate = new Date();
@@ -134,70 +170,111 @@ function startCountdown(duration) {
     countdownInterval = setInterval(updateCountdown, 1000);
 }
 
-function saveRecording() {
+// Updated saveRecording function to use IndexedDB
+async function saveRecording() {
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
     const date = localStorage.getItem('recordDate') || new Date().toISOString().slice(0,10);
     const duration = localStorage.getItem('recordDurationText') || '3 Minutes';
 
-    // Convert blob to base64 for storage
-    const reader = new FileReader();
-    reader.onloadend = function() {
-        const record = {
-            id: Date.now(),
-            date: date,
-            duration: duration,
-            video: reader.result,
-            timestamp: new Date().toISOString()
-        };
+    const record = {
+        id: Date.now(),
+        date: date,
+        duration: duration,
+        videoBlob: blob, // Store blob directly instead of base64
+        timestamp: new Date().toISOString()
+    };
 
-        // Get existing records
-        const records = JSON.parse(localStorage.getItem('dailyRecords') || '[]');
-        records.unshift(record);
-
-        // Keep only last 50 records to prevent storage issues
-        if (records.length > 50) {
-            records.splice(50);
-        }
-
-        localStorage.setItem('dailyRecords', JSON.stringify(records));
-
+    try {
+        await saveRecordToDB(record);
         document.getElementById('status').textContent = 'Recording saved!';
         document.getElementById('status').className = 'recording-status ready';
 
         setTimeout(() => {
             window.location.href = 'records.html';
         }, 1500);
-    };
-    reader.readAsDataURL(blob);
+    } catch (error) {
+        console.error('Failed to save recording:', error);
+        document.getElementById('status').textContent = 'Failed to save recording';
+    }
 }
 
-// Load and display records (for records.html)
-function loadRecords() {
-    const records = JSON.parse(localStorage.getItem('dailyRecords') || '[]');
-    const recordsList = document.getElementById('recordsList');
+// Save record to IndexedDB
+function saveRecordToDB(record) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['records'], 'readwrite');
+        const store = transaction.objectStore('records');
+        const request = store.add(record);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
 
+// Updated loadRecords function to use IndexedDB
+async function loadRecords() {
+    const recordsList = document.getElementById('recordsList');
     if (!recordsList) return;
 
-    if (records.length === 0) {
-        recordsList.innerHTML = '<div class="no-records">No records found. Create your first recording!</div>';
-        return;
-    }
+    try {
+        const records = await getRecordsFromDB();
+        
+        if (records.length === 0) {
+            recordsList.innerHTML = '<div class="no-records">No records found. Create your first recording!</div>';
+            return;
+        }
 
-    recordsList.innerHTML = records.map(record => `
-        <div class="record-card">
-            <div class="record-date">${formatDate(record.date)}</div>
-            <div class="record-duration">Duration: ${record.duration}</div>
-            <video class="record-video" id="video-${record.id}" controls style="display: none;">
-                <source src="${record.video}" type="video/webm">
-            </video>
-            <div class="record-actions">
-                <button class="btn" onclick="playVideo(${record.id})">▶️ Play</button>
-                <button class="btn secondary" onclick="toggleMute(${record.id})">🔇 Mute</button>
-                <button class="btn" onclick="playAudio(${record.id})">🎧 Audio</button>
-                <button class="btn danger" onclick="deleteRecord(${record.id})">🗑️ Delete</button>
+        recordsList.innerHTML = records.map(record => `
+            <div class="record-card">
+                <div class="record-date">${formatDate(record.date)}</div>
+                <div class="record-duration">Duration: ${record.duration}</div>
+                <video class="record-video" id="video-${record.id}" controls style="display: none;">
+                </video>
+                <div class="record-actions">
+                    <button class="btn" onclick="playVideo(${record.id})">▶️ Play</button>
+                    <button class="btn secondary" onclick="toggleMute(${record.id})">🔇 Mute</button>
+                    <button class="btn" onclick="playAudio(${record.id})">🎧 Audio</button>
+                    <button class="btn danger" onclick="deleteRecord(${record.id})">🗑️ Delete</button>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `).join('');
+    } catch (error) {
+        console.error('Failed to load records:', error);
+        recordsList.innerHTML = '<div class="no-records">Error loading records</div>';
+    }
+}
+
+// Get records from IndexedDB
+function getRecordsFromDB() {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['records'], 'readonly');
+        const store = transaction.objectStore('records');
+        const index = store.index('timestamp');
+        const request = index.openCursor(null, 'prev'); // Get newest first
+        
+        const records = [];
+        request.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+                records.push(cursor.value);
+                cursor.continue();
+            } else {
+                resolve(records);
+            }
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// Get single record from IndexedDB
+function getRecordFromDB(recordId) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['records'], 'readonly');
+        const store = transaction.objectStore('records');
+        const request = store.get(recordId);
+        
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
 }
 
 function formatDate(dateStr) {
@@ -210,37 +287,96 @@ function formatDate(dateStr) {
     });
 }
 
-function playVideo(recordId) {
+// Updated playVideo function to work with IndexedDB blobs
+async function playVideo(recordId) {
     const video = document.getElementById(`video-${recordId}`);
+    
     if (video.style.display === 'none') {
-        video.style.display = 'block';
-        video.play();
+        try {
+            const record = await getRecordFromDB(recordId);
+            if (record && record.videoBlob) {
+                const videoUrl = URL.createObjectURL(record.videoBlob);
+                video.src = videoUrl;
+                video.style.display = 'block';
+                video.play();
+                
+                // Clean up URL when video ends or is hidden
+                video.addEventListener('ended', () => URL.revokeObjectURL(videoUrl));
+            }
+        } catch (error) {
+            console.error('Failed to load video:', error);
+        }
     } else {
         video.style.display = 'none';
         video.pause();
+        if (video.src && video.src.startsWith('blob:')) {
+            URL.revokeObjectURL(video.src);
+        }
     }
 }
 
-function toggleMute(recordId) {
+async function toggleMute(recordId) {
     const video = document.getElementById(`video-${recordId}`);
+    
+    // If video isn't loaded yet, load it first
+    if (!video.src) {
+        try {
+            const record = await getRecordFromDB(recordId);
+            if (record && record.videoBlob) {
+                const videoUrl = URL.createObjectURL(record.videoBlob);
+                video.src = videoUrl;
+            }
+        } catch (error) {
+            console.error('Failed to load video for mute toggle:', error);
+            return;
+        }
+    }
+    
     video.muted = !video.muted;
 }
 
-function playAudio(recordId) {
+async function playAudio(recordId) {
     const video = document.getElementById(`video-${recordId}`);
-    video.style.display = 'block';
-    video.style.width = '100px';
-    video.style.height = '50px';
-    video.play();
+    
+    try {
+        const record = await getRecordFromDB(recordId);
+        if (record && record.videoBlob) {
+            const videoUrl = URL.createObjectURL(record.videoBlob);
+            video.src = videoUrl;
+            video.style.display = 'block';
+            video.style.width = '100px';
+            video.style.height = '50px';
+            video.play();
+            
+            video.addEventListener('ended', () => URL.revokeObjectURL(videoUrl));
+        }
+    } catch (error) {
+        console.error('Failed to load video for audio playback:', error);
+    }
 }
 
-function deleteRecord(recordId) {
+// Updated deleteRecord function to use IndexedDB
+async function deleteRecord(recordId) {
     if (confirm('Are you sure you want to delete this record?')) {
-        const records = JSON.parse(localStorage.getItem('dailyRecords') || '[]');
-        const filteredRecords = records.filter(record => record.id !== recordId);
-        localStorage.setItem('dailyRecords', JSON.stringify(filteredRecords));
-        loadRecords();
+        try {
+            await deleteRecordFromDB(recordId);
+            loadRecords();
+        } catch (error) {
+            console.error('Failed to delete record:', error);
+        }
     }
+}
+
+// Delete record from IndexedDB
+function deleteRecordFromDB(recordId) {
+    return new Promise((resolve, reject) => {
+        const transaction = db.transaction(['records'], 'readwrite');
+        const store = transaction.objectStore('records');
+        const request = store.delete(recordId);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
 }
 
 // PWA Installation
@@ -340,4 +476,4 @@ function setupNightToggle() {
 document.addEventListener('DOMContentLoaded', function() {
     setupNightToggle();
     setTimeout(setupNightToggle, 200);
-}); 
+});
