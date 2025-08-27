@@ -1,0 +1,646 @@
+/* Minimal custom CSS for Bootstrap version */
+.night-toggle {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+    transition: background 0.2s, color 0.2s, border 0.2s;
+    outline: none;
+}
+.night-toggle.toggled i {
+    transform: rotate(180deg);
+    transition: transform 0.4s cubic-bezier(.68,-0.55,.27,1.55);
+}
+body.night-mode {
+    background-color: #181A1B !important;
+}
+body.night-mode .card,
+body.night-mode .navbar,
+body.night-mode .container {
+    background-color: #23272b !important;
+    color: #f1f1f1 !important;
+}
+body.night-mode .btn {
+    background-color: #333 !important;
+    color: #fff !important;
+    border: none;
+}
+body.night-mode .btn-primary {
+    background-color: #0d6efd !important;
+}
+body.night-mode .btn-success {
+    background-color: #198754 !important;
+}
+body.night-mode .btn-light {
+    background-color: #222 !important;
+    color: #ffd700 !important;
+    border: 2px solid #ffd700 !important;
+}
+body.night-mode .btn-light:hover {
+    background-color: #ffd700 !important;
+    color: #222 !important;
+}
+body.night-mode .navbar {
+    background-color: #181A1B !important;
+}
+body.night-mode .nav-link {
+    color: #ffd700 !important;
+}
+.navbar {
+    background-color: #212529 !important;
+    height: 70px;
+    border-radius: 0 !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+.nav-link {
+    color: #fff !important;
+    transition: color 0.3s;
+}
+.nav-link.active, .nav-link:focus, .nav-link:hover {
+    color: #0d6efd !important;
+}
+body.night-mode .nav-link {
+    color: #ffd700 !important;
+}
+
+/* Record Cards Styling */
+.record-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.record-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.record-date {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+.record-duration {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: #000;
+}
+
+.record-video {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 200px;
+    display: block;
+    background: #000;
+    border-radius: 8px;
+}
+
+.record-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.record-actions .btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.record-actions .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.record-actions .btn.danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.record-actions .btn.danger:hover {
+    background-color: #c82333;
+}
+
+.record-actions .btn.secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.record-actions .btn.secondary:hover {
+    background-color: #5a6268;
+}
+
+.record-actions .btn-info {
+    background-color: #0dcaf0;
+    color: white;
+}
+
+.record-actions .btn-info:hover {
+    background-color: #0aa2c0;
+}
+
+.record-actions .btn-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.record-actions .btn-warning:hover {
+    background-color: #ffca2c;
+}
+
+.record-actions .btn-outline-secondary {
+    background-color: transparent;
+    color: #6c757d;
+    border: 1px solid #6c757d;
+}
+
+.record-actions .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+}
+
+.no-records {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+    font-size: 1.1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 2px dashed #dee2e6;
+}
+
+/* Night mode styles for records */
+body.night-mode .record-card {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+body.night-mode .record-date {
+    color: #e2e8f0;
+}
+
+body.night-mode .record-duration {
+    color: #a0aec0;
+}
+
+body.night-mode .no-records {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #a0aec0;
+}
+
+body.night-mode .record-actions .btn-info {
+    background-color: #0dcaf0;
+    color: #000;
+}
+
+body.night-mode .record-actions .btn-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+body.night-mode .record-actions .btn-outline-secondary {
+    background-color: transparent;
+    color: #a0aec0;
+    border-color: #a0aec0;
+}
+
+body.night-mode .record-actions .btn-outline-secondary:hover {
+    background-color: #a0aec0;
+    color: #2d3748;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+    .record-actions {
+        flex-direction: column;
+    }
+    
+    .record-actions .btn {
+        flex: none;
+        width: 100%;
+    }
+    
+    .record-card {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .streak-display {
+        top: 10px;
+        left: 10px;
+        right: auto;
+    }
+    
+    .streak-card {
+        padding: 6px 10px;
+        min-width: 70px;
+    }
+    
+    .streak-icon {
+        font-size: 1rem;
+    }
+    
+    .streak-number {
+        font-size: 1rem;
+    }
+    
+    .streak-label {
+        font-size: 0.55rem;
+    }
+}
+
+/* Video player enhancements */
+.record-video::-webkit-media-controls-panel {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.record-video::-webkit-media-controls-play-button,
+.record-video::-webkit-media-controls-pause-button {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+}
+
+/* Progress Dashboard Styling */
+.progress-dashboard {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9ecef;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #0d6efd;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Record Header Styling */
+.record-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.record-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rating-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.star {
+    color: #ffc107;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.star:hover {
+    transform: scale(1.2);
+}
+
+.star.fa-regular {
+    color: #dee2e6;
+}
+
+/* Notes Styling */
+.record-notes {
+    margin-bottom: 15px;
+}
+
+.notes-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+.notes-textarea:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* Bookmark Indicator */
+.bookmark-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 193, 7, 0.9);
+    color: #000;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    backdrop-filter: blur(5px);
+}
+
+/* Night mode styles for new features */
+body.night-mode .progress-dashboard {
+    background-color: #2d3748;
+    border-color: #4a5568;
+}
+
+body.night-mode .stat-card {
+    background-color: #4a5568;
+    border-color: #718096;
+}
+
+body.night-mode .stat-number {
+    color: #ffd700;
+}
+
+body.night-mode .stat-label {
+    color: #a0aec0;
+}
+
+body.night-mode .notes-textarea {
+    background-color: #4a5568;
+    border-color: #718096;
+    color: #e2e8f0;
+}
+
+body.night-mode .notes-textarea:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.25);
+}
+
+body.night-mode .rating-label {
+    color: #a0aec0;
+}
+
+body.night-mode .star.fa-regular {
+    color: #718096;
+}
+
+/* Transcription Styling */
+.transcription-container {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+}
+
+.transcription-box {
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.final-transcript {
+    color: #495057;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    margin-bottom: 5px;
+}
+
+.interim-transcript {
+    color: #6c757d;
+    font-style: italic;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* Filler Analysis Styling */
+.filler-analysis {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.filler-stats {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.filler-count {
+    font-weight: 600;
+    color: #dc3545;
+    font-size: 0.9rem;
+}
+
+.filler-percentage {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.filler-breakdown {
+    margin-top: 10px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+}
+
+.filler-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.filler-item:last-child {
+    border-bottom: none;
+}
+
+.filler-word {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.85rem;
+}
+
+.filler-count {
+    background: #dc3545;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.no-fillers {
+    text-align: center;
+    color: #28a745;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 10px;
+}
+
+/* Night mode styles for transcription and filler analysis */
+body.night-mode .transcription-container {
+    background-color: #4a5568;
+    border-color: #718096;
+}
+
+body.night-mode .transcription-box {
+    background-color: #2d3748;
+    border-color: #4a5568;
+    color: #e2e8f0;
+}
+
+body.night-mode .final-transcript {
+    color: #e2e8f0;
+}
+
+body.night-mode .interim-transcript {
+    color: #a0aec0;
+}
+
+body.night-mode .filler-analysis {
+    background-color: #4a5568;
+    border-color: #718096;
+}
+
+body.night-mode .filler-breakdown {
+    background-color: #2d3748;
+    border-color: #4a5568;
+}
+
+body.night-mode .filler-item {
+    border-bottom-color: #4a5568;
+}
+
+body.night-mode .filler-word {
+    color: #e2e8f0;
+}
+
+body.night-mode .filler-percentage {
+    color: #a0aec0;
+}
+
+/* Streak Display - Top Left Corner */
+.streak-display {
+    z-index: 1000;
+}
+
+.streak-card {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    border-radius: 12px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 80px;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.streak-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 12px rgba(255, 107, 107, 0.3);
+}
+
+.streak-icon {
+    font-size: 1.2rem;
+    animation: flame 2s ease-in-out infinite alternate;
+}
+
+.streak-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.streak-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: white;
+    line-height: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.streak-label {
+    font-size: 0.6rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes flame {
+    0% { transform: scale(1) rotate(-1deg); }
+    100% { transform: scale(1.05) rotate(1deg); }
+}
+
+/* Night mode styles for streak display */
+body.night-mode .streak-card {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e53);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.night-mode .streak-card:hover {
+    box-shadow: 0 3px 12px rgba(255, 107, 107, 0.4);
+} 

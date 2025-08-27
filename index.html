@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Record</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+    <button id="nightModeToggle" class="btn btn-light position-fixed top-0 end-0 m-3 shadow" aria-label="Toggle night mode" style="z-index:1200;"><i class="fa-solid fa-moon"></i></button>
+    <!-- Streak Display - Top Left -->
+    <div class="streak-display position-fixed top-0 start-0 m-3">
+        <div class="streak-card">
+            <div class="streak-icon">🔥</div>
+            <div class="streak-content">
+                <div class="streak-number" id="streak">0</div>
+                <div class="streak-label">Day Streak</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container min-vh-100 d-flex flex-column justify-content-center align-items-center">
+        <div class="p-4 w-100" style="max-width: 500px;">
+            <h1 class="text-center mb-4"> Daily Record by <br> <b><i>Perthho</i></b></h1>
+            
+            <!-- Simplified Progress Dashboard -->
+            <div class="progress-dashboard mb-4">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalRecords">0</div>
+                            <div class="stat-label">Total Records</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="stat-card">
+                            <div class="stat-number" id="avgFillerWords">0.0</div>
+                            <div class="stat-label">Avg Filler Words</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <a class="btn btn-primary w-100 mb-2" href="add.html"><i class="fa-solid fa-plus me-2"></i>Add Record</a>
+            <a class="btn btn-success w-100 mb-2" href="records.html"><i class="fa-solid fa-folder-open me-2"></i>Previous Records</a>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand navbar-dark bg-dark fixed-bottom shadow-lg w-100" style="border-radius:0; margin:0; left:0; right:0;">
+        <div class="container-fluid justify-content-between px-4">
+            <a href="add.html" class="nav-link text-center">
+                <i class="fa-solid fa-video fa-lg"></i><br><small>Record</small>
+            </a>
+            <a href="index.html" class="nav-link text-center active">
+                <i class="fa-solid fa-house fa-lg"></i><br><small>Home</small>
+            </a>
+            <a href="records.html" class="nav-link text-center">
+                <i class="fa-solid fa-folder-open fa-lg"></i><br><small>Records</small>
+            </a>
+        </div>
+    </nav>
+    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
