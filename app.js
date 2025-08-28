@@ -251,6 +251,12 @@ function saveRecording() {
     // Convert blob to base64 for storage
     const reader = new FileReader();
     reader.onloadend = function() {
+        if (!reader.result) {
+            console.error('Failed to convert video blob to base64.');
+            document.getElementById('status').textContent = 'Error saving recording.';
+            return;
+        }
+
         // Analyze filler words from transcription
         const fillerAnalysis = analyzeFillerWords(transcriptionText);
         
@@ -287,6 +293,12 @@ function saveRecording() {
             window.location.href = 'records.html';
         }, 1500);
     };
+
+    reader.onerror = function() {
+        console.error('Error reading video blob.');
+        document.getElementById('status').textContent = 'Error processing recording.';
+    };
+
     reader.readAsDataURL(blob);
 }
 
@@ -307,38 +319,23 @@ function loadRecords() {
             <div class="record-header">
                 <div class="record-date">${formatDate(record.date)}</div>
                 <div class="record-duration">Duration: ${record.duration}</div>
-                <div class="record-rating">
-                    <span class="rating-label">Rating:</span>
-                    <div class="star-rating" id="rating-${record.id}">
-                        ${generateStarRating(record.rating || 0, record.id)}
-                    </div>
-                </div>
                 ${record.fillerAnalysis ? `
                 <div class="filler-analysis">
                     <div class="filler-stats">
                         <span class="filler-count">${record.fillerAnalysis.totalFillerWords} filler words</span>
                         <span class="filler-percentage">(${record.fillerAnalysis.fillerPercentage}%)</span>
                     </div>
-                    <div class="filler-breakdown" id="filler-breakdown-${record.id}" style="display: none;">
-                        ${generateFillerBreakdown(record.fillerAnalysis.fillerCount)}
-                    </div>
-                    <button class="btn btn-sm btn-outline-info" onclick="toggleFillerBreakdown(${record.id})">
-                        <i class="fa-solid fa-chart-bar"></i> Details
-                    </button>
                 </div>
                 ` : ''}
             </div>
             <div class="video-container">
-                <video class="record-video" id="video-${record.id}" controls preload="metadata" poster="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjhmOWZhIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzZjNzU3ZCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIFZpZGVvIFByZXZpZXc8L3RleHQ+PC9zdmc+">
+                <video class="record-video" id="video-${record.id}" controls preload="metadata">
                     <source src="${record.video}" type="video/webm">
                     Your browser does not support the video tag.
                 </video>
                 <div class="bookmark-indicator" id="bookmark-indicator-${record.id}" style="display: none;">
                     <i class="fa-solid fa-bookmark"></i> Bookmarked at <span id="bookmark-time-${record.id}"></span>
                 </div>
-            </div>
-            <div class="record-notes">
-                <textarea class="notes-textarea" id="notes-${record.id}" placeholder="Add your notes about this recording..." onchange="saveNotes(${record.id})">${record.notes || ''}</textarea>
             </div>
             <div class="record-actions">
                 <button class="btn btn-primary" onclick="toggleVideoPlayback(${record.id})" id="playBtn-${record.id}">▶️ Play</button>
@@ -349,6 +346,15 @@ function loadRecords() {
             </div>
         </div>
     `).join('');
+
+    // Add error handling for video playback
+    records.forEach(record => {
+        const video = document.getElementById(`video-${record.id}`);
+        video.onerror = () => {
+            console.error(`Error loading video for record ID: ${record.id}`);
+            video.insertAdjacentHTML('afterend', '<div class="text-danger">Failed to load video.</div>');
+        };
+    });
 }
 
 function formatDate(dateStr) {
@@ -701,4 +707,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('totalRecords')) {
         updateProgressDashboard();
     }
-}); 
+
+    // Load records if on records.html
+    if (document.getElementById('recordsList')) {
+        loadRecords();
+    }
+});
